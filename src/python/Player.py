@@ -8,7 +8,7 @@ class Observation:
 FXObservation sub class records an exchange rate at single pt in time between currencies
 """
 class FXObservation(Observation):
-    def __init__(self, observedtime, buycurrency, sellcurrency, exhangerate):
+    def __init__(self, observedtime, buycurrency, sellcurrency, fxrate):
         Observation.__init__(observedtime)
         self.buyccy = buycurrency
         self.sellccy = sellcurrency
@@ -21,7 +21,7 @@ class CBObservation(Observation):
     def __init__(self, observedtime, centralbank, interestrate):
         Observation.__init__(observedtime)
         self.cbank = centralbank
-        self.irrate = irrate
+        self.irrate = interestrate
 
 """
 Agent base class for various agents with varied strategies for observing and determining markets
