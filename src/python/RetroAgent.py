@@ -10,7 +10,7 @@ class Observation:
 FXObservation sub class records an exchange rate at single pt in time between currencies
 """
 class FXObservation(Observation):
-    def __init__(self, observedtime, buycurrency, sellcurrency, exhangerate):
+    def __init__(self, observedtime, buycurrency, sellcurrency, fxrate):
         Observation.__init__(observedtime)
         self.buyccy = buycurrency
         self.sellccy = sellcurrency
@@ -20,11 +20,18 @@ class FXObservation(Observation):
 Agent base class for various agents with varied strategies for observing and determining markets
 """
 class Agent:
-    def __init__(self):
-        pass
+
+    def __init__(self, markets={}, budget={}):
+        self.budget = budget  # initial money/currency pairs/equities an agent possesses
+        self.markets = markets  # markets/environments an agent is aware about and can trade on them
+
     def Observe(self, observation):
         raise NotImplementedError("Observe not implemented yet")
-    def Buy(self, ccy, timestamp):
+
+    def Buy(self, budget_key, budget_amount, timestamp):
+        raise NotImplementedError("Buy not implemented yet")
+
+    def Sell(self, budget_key, budget_amount, timestamp):
         raise NotImplementedError("Buy not implemented yet")
 """
 RetroAgent implements Agent that makes decisions based on a perfect model
