@@ -1,6 +1,6 @@
 # MarketModel module
 import calendar
-import requests
+import requests, os
 import json
 from dateutil.parser import parse
 from datetime import datetime, timedelta, date
@@ -34,6 +34,8 @@ class MarketModel:
     def request(self):
         #date_range = daterange(self.startDate, self.endDate) # does not work with fixer- request rate is limited
         date_range = daterange(self.endDate-timedelta(10), self.endDate) # TODO change - avoid fixer.io
+        if not os.path.exists(self.data_path):
+            os.makedirs(self.data_path)
         f = open(self.data_path+self.fileName+".csv", 'w')
         f.write("DATE\t" + self.fileName + "\n")
         for d in date_range:
