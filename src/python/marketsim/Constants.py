@@ -3,4 +3,4 @@ class CCY(Enum):
     EUR=1
     GBP=2
 class CCYMARKET(Enum):
-    EURGBP=1
+    EURGBP=(CCY.EUR,CCY.GBP)
