@@ -4,7 +4,9 @@ import requests, os
 import json
 from dateutil.parser import parse
 from datetime import datetime, timedelta, date
-
+import matplotlib.pyplot as plt
+import quandl, tokens
+import pandas as pd
 
 def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
@@ -14,13 +16,14 @@ def daterange(start_date, end_date):
 MarketModel base class for modelling a FX market
 """
 class MarketModel:
-    url = "http://api.fixer.io/" # TODO replace with other source
+    url = "http://api.fixer.io/" # Fixer was replaced with Quandl info source, due to limitations of Fixer
     data_path = "data/"
 
     def __init__(self):
-        self.baseCurrency = "GBP"
+        self.agency='ECB'
+        self.baseCurrency = "USD"
         self.quoteValue = "EUR"  # quote value is not only a currency but also a price e.g. of commodity share
-        self.fileName = self.baseCurrency+'.'+self.quoteValue
+        self.fileName = self.baseCurrency+'-'+self.quoteValue
         self.startDate = parse("2000-01-01")
         self.endDate = datetime.today()
         self.marketprice = {}
@@ -32,11 +35,19 @@ class MarketModel:
         self.endDate = parse(date_str)
 
     def request(self):
-        #date_range = daterange(self.startDate, self.endDate) # does not work with fixer- request rate is limited
-        date_range = daterange(self.endDate-timedelta(10), self.endDate) # TODO change - avoid fixer.io
+        self.df = quandl.get(self.agency+'/'+self.quoteValue+self.baseCurrency, authtoken=tokens.get_quandl_tocken())
         if not os.path.exists(self.data_path):
             os.makedirs(self.data_path)
-        f = open(self.data_path+self.fileName+".csv", 'w')
+        file_name = self.data_path + self.fileName + ".csv"
+        self.df.to_csv(file_name, index=True, sep='\t')
+        print("saved to file: " + file_name)
+
+    def requestFixer(self):
+        # date_range = daterange(self.startDate, self.endDate) # does not work with fixer- request rate is limited
+        date_range = daterange(self.endDate - timedelta(10), self.endDate)  # TODO change - avoid fixer.io
+        if not os.path.exists(self.data_path):
+            os.makedirs(self.data_path)
+        f = open(self.data_path + self.fileName + ".csv", 'w')
         f.write("DATE\t" + self.fileName + "\n")
         for d in date_range:
             date_str = '{:%Y-%m-%d}'.format(d)
@@ -53,11 +64,11 @@ class MarketModel:
 
     def get_market_price(self, timestamp):
         try:
-            return self.marketprice[timestamp]
+            return self.df.loc[timestamp].values[0]
         except:
             pass
         try:
-            return self.marketprice['{:%Y-%m-%d}'.format(parse(timestamp))]
+            return self.df.loc['{:%Y-%m-%d}'.format(parse(timestamp))].values[0]
         except:
             raise
 """
