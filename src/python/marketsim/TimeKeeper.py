@@ -15,3 +15,9 @@ class TimeKeeper:
         return -1
     def current(self):
         return self.current_time
+
+class TimeUtils:
+    @staticmethod
+    def isEOM(time):
+        start_of_following_month= (time.replace(day=1) + timedelta(days=31)).replace(day=1,hour=0,minute=0,second=0)
+        return time == (start_of_following_month - timedelta(days=1))

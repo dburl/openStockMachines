@@ -1,6 +1,6 @@
 from marketsim.MarketModel import PerfectFXModel
-from marketsim.Constants import CCYMARKET, CCY
-from marketsim.Exchange import Account
+from marketsim.Constants import CCYMARKET, CCY, CCYUtils
+from marketsim.Exchange import Account, BuyOrder
 
 """
 Observation base class for various market specific observation sub classes
@@ -46,8 +46,14 @@ class RetroAgent(Agent):
         self.budget_goal = budget_goal
         for k in market_keys:
             self.init_model(k)
-            self.init_budget(k[0])
-            self.init_budget(k[1])
+            self.init_market(k)                           #TODO self.markets seems redundant
+            ccy1 = CCYUtils.getMarketCCY(k)[0]            #TODO why do I need CCYUtils here? why not index directly on k
+            ccy2 = CCYUtils.getMarketCCY(k)[1]
+            self.init_budget(ccy1)
+            self.init_budget(ccy2)
+    def init_market(self,market_key):
+        if market_key not in self.markets.keys():
+            self.markets[market_key] = True
     def init_model(self,market_key):
         if market_key not in self.models.keys():
             self.models[market_key] = PerfectFXModel
@@ -58,20 +64,28 @@ class RetroAgent(Agent):
         if fxobservation.market not in models.keys():
             init_model(fxobservation.market)
         models[fxobservation.market].SetMarketPrice(fxobservation.timestamp,fxobservation.fxrate)
-    def Buy(self, market_key):
-        full_balance = self.budget[market_key[0]]
-        src_acc = self.budget[market_key[0]]
-        dst_acc = self.budget[market_key[1]]
+    def buy(self, market_key):
+        ccy1 = CCYUtils.getMarketCCY(market_key)[0]
+        ccy2 = CCYUtils.getMarketCCY(market_key)[1]
+        full_balance = self.budget[ccy1].balance()
+        src_acc = self.budget[ccy1]
+        dst_acc = self.budget[ccy2]
         buy_order = BuyOrder(market_key, full_balance, src_acc, dst_acc)
         self.exchange.add_order(buy_order)
-    def update(self):
+    def update(self, time):
         """
         where a normal agent would observe current market prices and adjust model
         RetroAgent can see the future so....
         populate the model(s) with all observations provided by exchange
         then, if datetime is best buy/sell to maximize budget_goal
         """
-        raise NotImplementedError("TODO: act upon strategy using market model")
+        #TODO replace this dummy code
+        for k in self.markets.keys():
+            if(k == CCYMARKET.EURGBP):
+                self.buy(k)
+
+    def __str__(self):
+        return "***Summary for RetroAgent***\n" + '\n'.join(["{}: {}".format(k, self.budget[k].balance()) for k in self.budget.keys()])
 
 
 if __name__ == "__main__":

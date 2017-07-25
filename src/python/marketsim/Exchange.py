@@ -1,3 +1,4 @@
+from marketsim.TimeKeeper import TimeUtils
 """
 InfMonthlyStandingOrder: inifinte monthly standing order
 """
@@ -6,21 +7,24 @@ class InfMonthlyStandingOrder:
         self.ccy = ccy
         self.qty = qty
         self.payee_acc = payee_acc
-    def update(self):
-        # TODO check datetime is end of month
-        payee_acc.deposit(qty)
+    def update(self, time):
+        if(TimeUtils.isEOM(time)):
+            self.payee_acc.credit(self.qty)
 
 """
 BuyOrder: order to buy a currency
 """
 class BuyOrder:
     def __init__(self, market_key, qty, payer_acc, payee_acc):
-        pass
-    def update(self):
-        market_price = get_price(market_key)
-        market_value = market_price * qty
-        payer_acc -= qty
-        payee_acc += market_value
+        self.market_key = market_key
+        self.qty = qty
+        self.payer_acc = payer_acc
+        self.payee_acc = payee_acc
+    def update(self, time):
+        self.market_price = 1.2#get_price(self.market_key)  #TODO need to lookup a ticker here for current price
+        self.market_value = self.market_price * self.qty
+        self.payer_acc.debit(self.qty)
+        self.payee_acc.credit(self.market_value)
 
 
 """
@@ -30,8 +34,12 @@ class Account:
     def __init__(self,ccy):
         self.ccy = ccy
         self.bal = 0
-    def deposit(self,qty):
+    def credit(self,qty):
         self.bal += qty
+    def debit(self,qty):
+        self.bal -= qty
+    def balance(self):
+        return self.bal
 """
 Exchange: holds and executes orders
 """
@@ -43,4 +51,4 @@ class Exchange:
         self.orders.append(order)
     def update(self,time):
         for nxt in self.orders:
-            nxt.update()
+            nxt.update(time)

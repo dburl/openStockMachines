@@ -7,5 +7,8 @@ class MarketEngine:
 
     def run(self):
         while(self.time_keeper.next() != -1):
+            print("GameEngine - {}".format(self.time_keeper.current()))
             for mo in self.mrkt_objects:
-                mo.update()
+                mo.update(self.time_keeper.current())
+        for mo in self.mrkt_objects:
+            print(mo)
