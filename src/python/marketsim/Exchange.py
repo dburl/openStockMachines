@@ -6,7 +6,7 @@ Order: base class for an Exchange order
 class Order:
     def __init__(self):
         self.expired = False
-    def update(self, time):
+    def update(self, time, markets):
         raise NotImplementedError("update not implemented by child class yet")
     def expire(self):
         self.expired = True
@@ -22,7 +22,7 @@ class InfMonthlyStandingOrder(Order):
         self.ccy = ccy
         self.qty = qty
         self.payee_acc = payee_acc
-    def update(self, time):
+    def update(self, time, markets):
         if(TimeUtils.isEOM(time)):
             self.payee_acc.credit(self.qty)
 
@@ -36,11 +36,14 @@ class BuyOrder(Order):
         self.qty = qty
         self.payer_acc = payer_acc
         self.payee_acc = payee_acc
-    def update(self, time):
-        self.market_price = 1.2#get_price(self.market_key)  #TODO need to lookup a ticker here for current price
-        self.market_value = self.market_price * self.qty
-        self.payer_acc.debit(self.qty)
-        self.payee_acc.credit(self.market_value)
+    def update(self, time, markets):
+        if(self.market_key not in markets.keys()):
+            print("BuyOrder failed, invalid market key")
+        else:
+            self.market_price = markets[self.market_key].get_market_price(time)
+            self.market_value = self.market_price * self.qty
+            self.payer_acc.debit(self.qty)
+            self.payee_acc.credit(self.market_value)
         Order.expire(self)
 
 
@@ -63,12 +66,12 @@ class Account:
 Exchange: holds and executes orders
 """
 class Exchange:
-    orders=[]
-    def __init__(self, init_orders):
+    def __init__(self, market_models, init_orders):
+        self.markets = market_models
         self.orders = init_orders
     def add_order(self, order):
         self.orders.append(order)
     def update(self,time):
         for nxt in self.orders:
-            nxt.update(time)
+            nxt.update(time, self.markets)
         self.orders = list(filter(lambda x: not x.is_expired(), self.orders))
