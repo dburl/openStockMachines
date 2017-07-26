@@ -1,9 +1,24 @@
 from marketsim.TimeKeeper import TimeUtils
+
+"""
+Order: base class for an Exchange order
+"""
+class Order:
+    def __init__(self):
+        self.expired = False
+    def update(self, time):
+        raise NotImplementedError("update not implemented by child class yet")
+    def expire(self):
+        self.expired = True
+    def is_expired(self):
+        return self.expired
+
 """
 InfMonthlyStandingOrder: inifinte monthly standing order
 """
-class InfMonthlyStandingOrder:
+class InfMonthlyStandingOrder(Order):
     def __init__(self, ccy, qty, payee_acc):
+        Order.__init__(self)
         self.ccy = ccy
         self.qty = qty
         self.payee_acc = payee_acc
@@ -14,8 +29,9 @@ class InfMonthlyStandingOrder:
 """
 BuyOrder: order to buy a currency
 """
-class BuyOrder:
+class BuyOrder(Order):
     def __init__(self, market_key, qty, payer_acc, payee_acc):
+        Order.__init__(self)
         self.market_key = market_key
         self.qty = qty
         self.payer_acc = payer_acc
@@ -25,6 +41,7 @@ class BuyOrder:
         self.market_value = self.market_price * self.qty
         self.payer_acc.debit(self.qty)
         self.payee_acc.credit(self.market_value)
+        Order.expire(self)
 
 
 """
@@ -40,6 +57,8 @@ class Account:
         self.bal -= qty
     def balance(self):
         return self.bal
+    def __str__(self):
+        return "{} - {}".format(self.ccy, self.bal)
 """
 Exchange: holds and executes orders
 """
@@ -52,3 +71,4 @@ class Exchange:
     def update(self,time):
         for nxt in self.orders:
             nxt.update(time)
+        self.orders = list(filter(lambda x: not x.is_expired(), self.orders))

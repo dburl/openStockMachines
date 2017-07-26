@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     print("Configuring...")
 
-    exchange =  Exchange([])
+    exchange = Exchange([])
     agent = RetroAgent(exchange,{CCYMARKET.EURGBP},CCY.EUR)
     agent_salary = InfMonthlyStandingOrder(CCY.GBP, 1000, agent.budget[CCY.GBP])
     exchange.add_order(agent_salary)
