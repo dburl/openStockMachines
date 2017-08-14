@@ -14,7 +14,7 @@ class Order:
         return self.expired
 
 """
-InfMonthlyStandingOrder: inifinte monthly standing order
+InfMonthlyStandingOrder: infinite monthly standing order
 """
 class InfMonthlyStandingOrder(Order):
     def __init__(self, ccy, qty, payee_acc):
@@ -51,7 +51,7 @@ class BuyOrder(Order):
 Account: holds a currency
 """
 class Account:
-    def __init__(self,ccy):
+    def __init__(self, ccy):
         self.ccy = ccy
         self.bal = 0
     def credit(self,qty):
@@ -66,9 +66,13 @@ class Account:
 Exchange: holds and executes orders
 """
 class Exchange:
-    def __init__(self, market_models, init_orders):
-        self.markets = market_models
+    markets = {}
+    def __init__(self, market_model, init_orders=[]):
+        self.markets[market_model.market_key] = market_model  # multiple markets are possible
         self.orders = init_orders
+    def add_market(self, market_model, init_orders=[]):
+        self.markets[market_model.market_key] = market_model  # multiple markets are possible
+        self.orders.append(init_orders)
     def add_order(self, order):
         self.orders.append(order)
     def update(self,time):
