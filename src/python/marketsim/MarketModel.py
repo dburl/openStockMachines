@@ -86,8 +86,6 @@ class MarketModel:
 PerfectModel is the perfect store of market prices
 """
 class PerfectFXModel(MarketModel):
-    def __init__(self):
-        pass
 
     def get_market_price(self, timestamp):
         if timestamp not in self.marketprice.keys():

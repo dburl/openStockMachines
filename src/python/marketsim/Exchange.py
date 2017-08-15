@@ -47,21 +47,7 @@ class BuyOrder(Order):
         Order.expire(self)
 
 
-"""
-Account: holds a currency
-"""
-class Account:
-    def __init__(self, ccy):
-        self.ccy = ccy
-        self.bal = 0
-    def credit(self,qty):
-        self.bal += qty
-    def debit(self,qty):
-        self.bal -= qty
-    def balance(self):
-        return self.bal
-    def __str__(self):
-        return "{} - {}".format(self.ccy, self.bal)
+
 """
 Exchange: holds and executes orders
 """
