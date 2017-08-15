@@ -58,13 +58,14 @@ class MarketModel:
         file_name = self.data_path + self.__str__() + ".csv"
         data_file = Path(file_name)
         if data_file.is_file():
-            self.df = pd.read_csv(file_name)
+            self.df = pd.read_csv(file_name, sep='\t', index_col=0)
             print("read from file: " + file_name)
         else:
             self.df = quandl.get(agency+'/'+self.base_currency_name()+self.quote_value_name(), authtoken=tokens.get_quandl_tocken())
             if not os.path.exists(self.data_path):
                 os.makedirs(self.data_path)
-            self.df.to_csv(file_name, index=True, sep='\t')
+            #self.df.to_csv(file_name, index=True, sep='\t')
+            self.df.to_csv(file_name, sep='\t',  index=False, index_col=False)
             print("saved to file: " + file_name)
 
     def start_date(self, date_str):
@@ -79,9 +80,10 @@ class MarketModel:
         except:
             pass
         try:
-            return self.df.loc['{:%Y-%m-%d}'.format(parse(timestamp))].values[0]
+            date = timestamp.strftime("%Y-%m-%d")
+            return self.df.ix[date].values[0]
         except:
-            raise
+            return None
 """
 PerfectModel is the perfect store of market prices
 """
