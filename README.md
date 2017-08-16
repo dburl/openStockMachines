@@ -7,7 +7,7 @@ Welcome to OpenStockMachines
  - Multi-agent Modeling 
  - and Machine Learning
 
-the primary purpose of the project  is to better understand the financial world that we are all living in. Each finding is reviewed and published in the associated blog: https://goo.gl/ZdgEAB
+the primary purpose of the project  is to better understand the financial world that we are all living in. Each finding is reviewed and published in the associated blog: https://goo.gl/LfFUSr
 
 ----------
 
