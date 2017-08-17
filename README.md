@@ -24,15 +24,15 @@ Please contact Dmitry Burlyaev if you want to contribute: surname.name@gmail.com
 
 > From your side :
 > - You can either come up with a nice idea to investigate
-> - Help to implement on-going research direction
-> - Theoretically contribute to our knowledge base in areas of:
+> - Help to implement an on-going research direction
+> - Theoretically contribute to our knowledge base in the next areas:
 >> 1. Trading
 >> 2. macro-economics 
 >> 3. AI 
 >> 4. Multi-agent modeling and emergent behavior
 
 >  
-> Check on-going activity in [<i class="icon-refresh"></i> On-going activity](#on-going_activity) section).
+> Check on-going activities in [<i class="icon-refresh"></i> On-going activity](#on-going_activity) section).
 
 ----------
 
