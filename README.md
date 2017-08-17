@@ -40,13 +40,13 @@ Please contact Dmitry Burlyaev if you want to contribute: surname.name@gmail.com
 
 <i class="icon-file"></i> **Direction:** Remittance Game - find currency exchange strategy for expats.
 
-Synopsis: There are more than 50 mln expats worldwide these days. Many of ask the next type of question:
+Synopsis: There are more than 50 mln expats worldwide these days. But almost everyone asks the next questions:
 
  - I am paid in a currency different from one in my homeland. I will come back home after few years abroad, when should I exchange money?
  - My pension fond is in a country where I don't live anymore - is it risky?
  - I still have some savings at home. Should I transfer all now if I am not planning to return to my homeland?
 
-How to answer on this question without losing your money... we will know soon...
+How to answer on this question without losing your money... in the world of Brexit, modern central banks' QE policies .... we will know soon...
 
 ### <i class="icon-upload"></i> Publications
 The results of each research **direction** end up here.
