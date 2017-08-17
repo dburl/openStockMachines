@@ -39,6 +39,7 @@ Please contact Dmitry Burlyaev if you want to contribute: surname.name@gmail.com
 ### <i class="icon-refresh"></i> On-going activity
 
 <i class="icon-file"></i> **Direction:** Remittance Game - find currency exchange strategy for expats.
+
 Synopsis: There are more than 50 mln expats worldwide these days. Many of ask the next type of question:
 
  - I am paid in a currency different from one in my homeland. I will come back home after few years abroad, when should I exchange money?
