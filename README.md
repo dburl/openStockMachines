@@ -46,7 +46,7 @@ Synopsis: There are more than 50 mln expats worldwide these days. But almost eve
  - My pension fond is in a country where I don't live anymore - is it risky?
  - I still have some savings at home. Should I transfer all now if I am not planning to return to my homeland?
 
-How to answer on this question without losing your money... in the world of Brexit, modern central banks' QE policies .... we will know soon...
+How to answer on these questions without losing your money... in the world of Brexit, modern central banks' QE policies .... we will know soon...
 
 ### <i class="icon-upload"></i> Publications
 The results of each research **direction** end up here.
