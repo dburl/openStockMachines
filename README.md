@@ -23,7 +23,7 @@ Please contact Dmitry Burlyaev if you want to contribute: surname.name@gmail.com
 >  If we find it relevant for the mankind, we start coding.
 
 > From your side :
-> - You can either cope up with nice idea to investigate
+> - You can either come up with a nice idea to investigate
 > - Help to implement on-going research direction
 > - Theoretically contribute to our knowledge base in areas of:
 >> 1. Trading
