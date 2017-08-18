@@ -4,7 +4,7 @@ import requests, os, sys
 import json
 from dateutil.parser import parse
 from datetime import datetime, timedelta, date
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import quandl, tokens
 import pandas as pd
 from marketsim.Constants import CCYMARKET, CCY
@@ -65,7 +65,7 @@ class MarketModel:
             if not os.path.exists(self.data_path):
                 os.makedirs(self.data_path)
             #self.df.to_csv(file_name, index=True, sep='\t')
-            self.df.to_csv(file_name, sep='\t',  index=False, index_col=False)
+            self.df.to_csv(file_name, sep='\t',  index=False)
             print("saved to file: " + file_name)
 
     def start_date(self, date_str):
