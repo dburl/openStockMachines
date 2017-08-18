@@ -1,6 +1,6 @@
 from marketsim.TimeKeeper import TimeUtils
 from marketsim.Constants import CCYMARKET, CCY
-from marketsim.Exchange import BuyOrder
+from marketsim.Order import BuyOrder
 
 """
 InfMonthlyStandingOrder: infinite monthly standing order
