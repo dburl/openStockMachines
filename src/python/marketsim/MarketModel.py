@@ -9,6 +9,7 @@ import quandl, tokens
 import pandas as pd
 from marketsim.Constants import CCYMARKET, CCY
 from pathlib import Path
+from Logger import *
 
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
@@ -42,7 +43,7 @@ class MarketModel:
             if type(self.market_key) == CCYMARKET:
                 return self.market_key.value[0].name
         else:
-            print("Unexpected market data request")
+            get_global_log().error("Unexpected market data request")
             raise
 
     def quote_value_name(self):  #e.g. GOLD/OIL/GOOGLE/etc
@@ -50,7 +51,7 @@ class MarketModel:
             if type(self.market_key) == CCYMARKET:
                 return self.market_key.value[1].name
         else:
-            print("Unexpected market data request")
+            get_global_log().error("Unexpected market data request")
             raise
 
     def get_quandl_data(self):
@@ -59,14 +60,13 @@ class MarketModel:
         data_file = Path(file_name)
         if data_file.is_file():
             self.df = pd.read_csv(file_name, sep='\t', index_col=0)
-            print("read from file: " + file_name)
+            get_global_log().info("read from file: " + file_name)
         else:
             self.df = quandl.get(agency+'/'+self.base_currency_name()+self.quote_value_name(), authtoken=tokens.get_quandl_tocken())
             if not os.path.exists(self.data_path):
                 os.makedirs(self.data_path)
-            #self.df.to_csv(file_name, index=True, sep='\t')
             self.df.to_csv(file_name, sep='\t',  index=False)
-            print("saved to file: " + file_name)
+            get_global_log().info("saved to file: " + file_name)
 
     def start_date(self, date_str):
         self.startDate = parse(date_str)
@@ -83,6 +83,7 @@ class MarketModel:
             date = timestamp.strftime("%Y-%m-%d")
             return self.df.ix[date].values[0]
         except:
+            get_global_log().warning("No market"+ str(self.market_key) + " info" + timestamp.strftime(" @%Y-%m-%d"))
             return None
 """
 PerfectModel is the perfect store of market prices
@@ -91,6 +92,7 @@ class PerfectFXModel(MarketModel):
 
     def get_market_price(self, timestamp):
         if timestamp not in self.marketprice.keys():
+            get_global_log().warning("Requested value not observed yet: " + timestamp.strftime("%Y-%m-%d"))
             raise ValueError("Requested value not observed yet")
         return self.marketprice[timestamp]
 

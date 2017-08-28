@@ -1,4 +1,4 @@
-
+from Logger import *
 
 class MarketEngine:
     def __init__(self, mrkt_objects, time_keeper):
@@ -7,10 +7,10 @@ class MarketEngine:
 
     def run(self):
         while(self.time_keeper.next() != -1):
-            print("MarketEngine - {}".format(self.time_keeper.current()))
+            get_global_log().debug("MarketEngine - {}".format(self.time_keeper.current()))
             for mo in self.mrkt_objects:
                 mo.update(self.time_keeper.current())
 
-        print("--- MarketEngine - END OF RUN ---")
+        get_global_log().info("--- MarketEngine - END OF RUN ---")
         for mo in self.mrkt_objects:
-            print(mo)
+            get_global_log().info(mo)
