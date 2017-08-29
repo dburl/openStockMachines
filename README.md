@@ -13,7 +13,7 @@ the primary purpose of the project  is to better understand the financial world 
 
 ### <i class="icon-pencil"></i> Contribute
 
-Currently, there are 4 contributors. 
+Currently, there are 5 contributors. 
 
 Please contact Dmitry Burlyaev if you want to contribute: surname.name@gmail.com  (replace with the name in lower case)
 

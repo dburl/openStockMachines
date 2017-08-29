@@ -1,8 +1,8 @@
 from marketsim.MarketModel import PerfectFXModel
 from marketsim.Constants import CCYMARKET, CCY
 from marketsim.Account import Account
-from marketsim.Order import MarketOrder
-
+from marketsim.Order import MarketOrder, BuyOrder, SellOrder
+from Logger import *
 
 """
 Agent base class for various agents with varied strategies for observing and determining markets
@@ -25,7 +25,7 @@ class Agent:
             if market_key in exchange.markets:  # if data is available
                 self.market_models[market_key] = exchange.markets[market_key]
             else:
-                print("Market requested by an agent does not exist at exchange")
+                get_global_log().error("[Error]\t Market requested by an agent does not exist at exchange")
                 raise
 
     def init_account(self, budget_key):
@@ -40,16 +40,12 @@ class Agent:
             return self.market_models[market].get_market_price[timestamp]
 
     def buy(self, market_key, price_in_dest):
-        src_acc = self.accounts[market_key.value[0]]
-        dst_acc = self.accounts[market_key.value[1]]
-        sell_order = MarketOrder(market_key, price_in_dest, src_acc, dst_acc)
-        self.exchange.add_order(sell_order)
+        buy_order = BuyOrder(market_key, price_in_dest, self.accounts)
+        self.exchange.add_order(buy_order)
 
     def sell(self, market_key, price_in_src):
-        src_acc = self.accounts[market_key.value[1]]
-        dst_acc = self.accounts[market_key.value[0]]
-        buy_order = MarketOrder(market_key, price_in_src, src_acc, dst_acc)
-        self.exchange.add_order(buy_order)
+        sell_order = SellOrder(market_key, price_in_src, self.accounts)
+        self.exchange.add_order(sell_order)
 
     def update(self, time):
         pass

@@ -43,7 +43,7 @@ class MarketModel:
             if type(self.market_key) == CCYMARKET:
                 return self.market_key.value[0].name
         else:
-            get_global_log().error("Unexpected market data request")
+            get_global_log().error("[Error]\t Unexpected market data request")
             raise
 
     def quote_value_name(self):  #e.g. GOLD/OIL/GOOGLE/etc
@@ -51,7 +51,7 @@ class MarketModel:
             if type(self.market_key) == CCYMARKET:
                 return self.market_key.value[1].name
         else:
-            get_global_log().error("Unexpected market data request")
+            get_global_log().error("[Error]\t Unexpected market data request")
             raise
 
     def get_quandl_data(self):
@@ -83,7 +83,7 @@ class MarketModel:
             date = timestamp.strftime("%Y-%m-%d")
             return self.df.ix[date].values[0]
         except:
-            get_global_log().warning("No market"+ str(self.market_key) + " info" + timestamp.strftime(" @%Y-%m-%d"))
+            get_global_log().warning("[Warning]\t No market " + str(self.market_key) + " data" + timestamp.strftime(" @ %Y-%m-%d"))
             return None
 """
 PerfectModel is the perfect store of market prices
@@ -92,7 +92,7 @@ class PerfectFXModel(MarketModel):
 
     def get_market_price(self, timestamp):
         if timestamp not in self.marketprice.keys():
-            get_global_log().warning("Requested value not observed yet: " + timestamp.strftime("%Y-%m-%d"))
+            get_global_log().warning("[Warning]\t Requested value not observed yet: " + timestamp.strftime("%Y-%m-%d"))
             raise ValueError("Requested value not observed yet")
         return self.marketprice[timestamp]
 

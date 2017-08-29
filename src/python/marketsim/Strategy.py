@@ -1,6 +1,6 @@
 from marketsim.TimeKeeper import TimeUtils
 from marketsim.Constants import CCYMARKET, CCY
-from marketsim.Order import MarketOrder
+from marketsim.Order import MarketOrder, SellOrder, BuyOrder
 from Logger import *
 """
 InfMonthlyStandingOrder: infinite monthly standing order
@@ -25,7 +25,9 @@ class BuyEuros(Strategy):
         orders = []
         for acc_key, acc_value in accounts.items():
             if acc_key is not CCY.EUR and (acc_value.balance() != 0):
-                market_key=(acc_key, CCY.EUR)
-                orders.append(MarketOrder(market_key, acc_value.balance(), acc_value, accounts[CCY.EUR]))
+                get_global_log().info("[BuyEuros] new order " + time.strftime(" @ %Y-%m-%d"))
+                market_key = (acc_key, CCY.EUR)
+                new_order = SellOrder(market_key, acc_value.balance(), accounts)
+                orders.append(new_order)
         return orders
 
