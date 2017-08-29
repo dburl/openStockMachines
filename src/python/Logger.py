@@ -2,11 +2,8 @@ import logging, os
 
 global_log = None
 
-# Formater for logger
-
-
 def set_global_logger():
-    log_path = 'logs'
+    log_path = 'logs' # folder with logs
     global global_log
     logging.basicConfig(level=logging.INFO)
     logging.basicConfig(format='%(asctime)s -- %(name)s -- %(levelname)s -- %(message)s')
