@@ -17,6 +17,7 @@ class OrderBase:
         self.payee_acc = None
         self.market_price = None  # price at which the order is executed
         self.expiration_date = None
+        self.execution_date = None
 
     def expire(self):
         self.expired = True
@@ -33,7 +34,10 @@ class OrderBase:
     def update(self, time, markets):
         self.__check_market_inversion()
         self.__check_if_pending(time)
+        self.__sanity_check(markets)
 
+
+    def __sanity_check(self, markets):
         ## Sanity checks
         # if one of the accounts is not set properly
         if self.payer_acc is None or self.payee_acc is None:
@@ -43,7 +47,6 @@ class OrderBase:
         if not (type(self.market) is CCYMARKET) and (self.market in markets.keys()):
             get_global_log().error("[Error]\t Market key is not present at Exchange")
             raise
-
 
     def __check_if_pending(self, time):
         if self.expiration_date is None:
@@ -55,21 +58,21 @@ class OrderBase:
         return self.is_expired()
 
     def __check_market_inversion(self):
-        try:
-            market = CCYMARKET(self.market_key)
-            self.market = market
-        except:
-            pass
-
-        try:
-            market = CCYMARKET(self.market_key[::-1])
-            self.market_key_inverse = True
-            self.market = market
-        except:
-            pass
-        if self.market is None:
-            get_global_log().error("[Error]\t Order failed, invalid market key")
-            raise
+        if self.market is None:  # check only if the valid market is not found yet
+            try:
+                market = CCYMARKET(self.market_key)
+                self.market = market
+            except:
+                pass
+            try:
+                market = CCYMARKET(self.market_key[::-1])
+                self.market_key_inverse = True
+                self.market = market
+            except:
+                pass
+            if self.market is None:
+                get_global_log().error("[Error]\t Order failed, invalid market key")
+                raise
 
 """
 MarketOrder: order to buy a pair market_key = (equity_to_buy,account_to_pay_from)
@@ -81,11 +84,7 @@ class MarketOrder(OrderBase):
         self.qty = qty
         self.payer_acc = payer_acc
         self.payee_acc = payee_acc
-        get_global_log().info(str(self)+" of " +str(qty)+ " is created")
-
-    def with_accounts(self, accounts):
-        self.payer_acc = accounts[self.market_key.value[1]]
-        self.payee_acc = accounts[self.market_key.value[0]]
+        get_global_log().info(str(self)+" of " + str(qty) + " is created")
 
     def update(self, time, markets):
         OrderBase.update(self, time, markets)
@@ -101,12 +100,14 @@ class MarketOrder(OrderBase):
             self.payer_acc.debit(market_value)
             self.payee_acc.credit(self.qty)
             OrderBase.expire(self)  # mark as executed
-            get_global_log().info("Order#" + str(self.id) + " is executed: " + self.__str__())
+            self.execution_date = time
+            get_global_log().info("Executed " + self.__str__() + time.strftime(" @%Y-%m-%d"))
 
 
 class BuyOrder(MarketOrder):
     def __init__(self, market_key, qty, accounts):
         MarketOrder.__init__(self, market_key, qty, accounts[market_key[1]], accounts[market_key[0]])
+
 
 class SellOrder(MarketOrder):
     def __init__(self, market_key, qty, accounts):
@@ -126,4 +127,5 @@ class SellOrder(MarketOrder):
             self.payer_acc.debit(self.qty)
             self.payee_acc.credit(market_value)
             OrderBase.expire(self)  # mark as executed
+            self.execution_date = time
             get_global_log().info("Order#" + str(self.id) + " is executed: " + self.__str__())
