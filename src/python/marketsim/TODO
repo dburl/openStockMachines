@@ -1,0 +1,8 @@
+1) SellOrder is equivalent to short -> it means that account balance can be negative upon sufficient reservation in base currency
+    - transaction fees are still dedicted- check how
+2) Observatio class should be returned from MarketModel to Agent and used in strategy:
+    - it should include real market price
+    - fees information (defined by market model)
+3) order execution might not happen with the observed price due to slippage
+    - so order execution should take into account MarketModel
+4) graph visualization - it will help for debugging too
