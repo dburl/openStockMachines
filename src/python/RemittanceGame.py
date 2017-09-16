@@ -6,7 +6,10 @@ from marketsim.TimeKeeper import TimeKeeper
 from marketsim.MarketEngine import MarketEngine
 from marketsim.MarketModel import MarketModel, PerfectFXModel
 from marketsim.Strategy import MonthlySalary, BuyEuros
+from gui.DashBoard import *
+from gui.CandlePlot import *
 from Logger import *
+
 
 if __name__ == "__main__":
     set_global_logger()
@@ -29,3 +32,6 @@ if __name__ == "__main__":
     engine.run()
 
     get_global_log().info("MarketEngine ending @ {}".format(time_keeper.current()))
+
+    gui = RemittanceDashBoard()
+    gui.exec()
